@@ -59,31 +59,6 @@ public class EmployeeConfig {
         }
     }
 
-
-//public EmployeeDto createEmployee(EmployeeDto input) {
-//    try {
-//        var request = new org.springframework.http.HttpEntity<>(input);
-//        var response = restTemplate.exchange(
-//                BASE_URL,
-//                HttpMethod.POST,
-//                request,
-//                new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}
-//        ).getBody();
-//
-//        if (response != null) {
-//            return response.getData();
-//        } else {
-//            throw new RuntimeException("Empty response from backend when creating employee");
-//        }
-//    } catch (Exception e) {
-//        // Log the exact exception to help debug
-//        e.printStackTrace();
-//        throw new RuntimeException("Failed to create employee: " + e.getMessage(), e);
-//    }
-//}
-
-
-
     public String deleteEmployeeById(String name) {
         try {
             HttpHeaders headers = new HttpHeaders();

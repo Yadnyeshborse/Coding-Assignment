@@ -3,14 +3,9 @@ package com.reliaquest.api.service;
 import com.reliaquest.api.config.EmployeeConfig;
 import com.reliaquest.api.model.CreateEmployeeRequest;
 import com.reliaquest.api.model.EmployeeDto;
-import com.reliaquest.api.model.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -67,10 +62,6 @@ public class EmployeeService {
         return highestSalary;
     }
 
-
-//    public EmployeeDto createEmployee(EmployeeDto input) {
-//        return employeeClient.createEmployee(input);
-//    }
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
     CreateEmployeeRequest request = new CreateEmployeeRequest();
     request.setName(employeeDto.getEmployee_name());
@@ -78,12 +69,10 @@ public class EmployeeService {
     request.setAge(employeeDto.getEmployee_age());
     request.setTitle(employeeDto.getEmployee_title());
 
-    // Delegate to EmployeeConfig
     EmployeeDto created = employeeClient.createEmployee(request);
+    log.info("Created employee: {}", created);
     return created;
    }
-
-
 
 
     public String deleteEmployeeById(UUID id) {
