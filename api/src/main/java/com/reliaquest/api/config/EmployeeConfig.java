@@ -1,10 +1,14 @@
 package com.reliaquest.api.config;
 
+import com.reliaquest.api.model.CreateEmployeeRequest;
 import com.reliaquest.api.model.EmployeeDto;
 import com.reliaquest.api.model.ResponseWrapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.UUID;
@@ -32,15 +36,44 @@ public class EmployeeConfig {
         return response != null ? response.getData() : null;
     }
 
-    public EmployeeDto createEmployee(EmployeeDto input) {
-        ResponseWrapper<EmployeeDto> response =
-                restTemplate.exchange(
-                        BASE_URL,
-                        HttpMethod.POST,
-                        new org.springframework.http.HttpEntity<>(input),
-                        new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}).getBody();
+    public EmployeeDto createEmployee(CreateEmployeeRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CreateEmployeeRequest> entity = new HttpEntity<>(request, headers);
+
+        ResponseWrapper<EmployeeDto> response = restTemplate.exchange(
+                BASE_URL, // check this URL
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}
+        ).getBody();
+
         return response != null ? response.getData() : null;
     }
+
+
+//public EmployeeDto createEmployee(EmployeeDto input) {
+//    try {
+//        var request = new org.springframework.http.HttpEntity<>(input);
+//        var response = restTemplate.exchange(
+//                BASE_URL,
+//                HttpMethod.POST,
+//                request,
+//                new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}
+//        ).getBody();
+//
+//        if (response != null) {
+//            return response.getData();
+//        } else {
+//            throw new RuntimeException("Empty response from backend when creating employee");
+//        }
+//    } catch (Exception e) {
+//        // Log the exact exception to help debug
+//        e.printStackTrace();
+//        throw new RuntimeException("Failed to create employee: " + e.getMessage(), e);
+//    }
+//}
+
 
 
     public String deleteEmployeeById(String name) {
