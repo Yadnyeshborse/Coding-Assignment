@@ -55,10 +55,9 @@ public class EmployeeControllerImpl implements IEmployeeController<EmployeeDto, 
         return ResponseEntity.ok(created);
     }
 
-//    @Override
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteEmployeeById(@PathVariable String id) {
-//        String deletedName = employeeService.deleteEmployeeById(UUID.fromString(id));
-//        return ResponseEntity.ok(deletedName);
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteEmployeeById(@PathVariable String id) {
+        String deletedName = employeeService.deleteEmployeeById(UUID.fromString(id));
+        return ResponseEntity.ok(deletedName);
+    }
 }

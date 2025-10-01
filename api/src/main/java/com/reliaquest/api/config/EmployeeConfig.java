@@ -2,6 +2,7 @@ package com.reliaquest.api.config;
 
 import com.reliaquest.api.model.CreateEmployeeRequest;
 import com.reliaquest.api.model.EmployeeDto;
+import com.reliaquest.api.model.DeleteEmployeeRequest;
 import com.reliaquest.api.model.ResponseWrapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +44,19 @@ public class EmployeeConfig {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<CreateEmployeeRequest> entity = new HttpEntity<>(request, headers);
 
-        ResponseWrapper<EmployeeDto> response = restTemplate.exchange(
-                BASE_URL, // check this URL
-                HttpMethod.POST,
-                entity,
-                new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}
-        ).getBody();
+        try {
+            ResponseWrapper<EmployeeDto> response = restTemplate.exchange(
+                    BASE_URL,
+                    HttpMethod.POST,
+                    entity,
+                    new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}
+            ).getBody();
 
-        return response != null ? response.getData() : null;
+            return response != null ? response.getData() : null;
+        } catch (HttpStatusCodeException ex) {
+            // Propagate upstream server status (e.g., 400 for validation errors) instead of masking as 500
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getResponseBodyAsString(), ex);
+        }
     }
 
 
@@ -77,7 +85,19 @@ public class EmployeeConfig {
 
 
     public String deleteEmployeeById(String name) {
-        restTemplate.delete(BASE_URL + "/" + name);
-        return name;
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<DeleteEmployeeRequest> entity = new HttpEntity<>(new DeleteEmployeeRequest(name), headers);
+            restTemplate.exchange(
+                    BASE_URL,
+                    HttpMethod.DELETE,
+                    entity,
+                    new ParameterizedTypeReference<ResponseWrapper<Boolean>>() {}
+            );
+            return name;
+        } catch (HttpStatusCodeException ex) {
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getResponseBodyAsString(), ex);
+        }
     }
 }
