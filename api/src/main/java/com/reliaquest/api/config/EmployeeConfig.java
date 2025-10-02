@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class EmployeeConfig {
@@ -23,18 +24,20 @@ public class EmployeeConfig {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String BASE_URL = "http://localhost:8112/api/v1/employee";
+    //base url
+    @Value("${employee.client.base-url}")
+    private String baseUrl;
 
     public List<EmployeeDto> getAllEmployees() {
         ResponseWrapper<List<EmployeeDto>> response =
-                restTemplate.exchange(BASE_URL, HttpMethod.GET, null,
+                restTemplate.exchange(baseUrl, HttpMethod.GET, null,
                         new ParameterizedTypeReference<ResponseWrapper<List<EmployeeDto>>>() {}).getBody();
         return response != null ? response.getData() : null;
     }
 
     public EmployeeDto getEmployeeById(UUID id) {
         ResponseWrapper<EmployeeDto> response =
-                restTemplate.exchange(BASE_URL + "/" + id, HttpMethod.GET, null,
+                restTemplate.exchange(baseUrl + "/" + id, HttpMethod.GET, null,
                         new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}).getBody();
         return response != null ? response.getData() : null;
     }
@@ -46,7 +49,7 @@ public class EmployeeConfig {
 
         try {
             ResponseWrapper<EmployeeDto> response = restTemplate.exchange(
-                    BASE_URL,
+                    baseUrl,
                     HttpMethod.POST,
                     entity,
                     new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}
@@ -64,7 +67,7 @@ public class EmployeeConfig {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<DeleteEmployeeRequest> entity = new HttpEntity<>(new DeleteEmployeeRequest(name), headers);
             restTemplate.exchange(
-                    BASE_URL,
+                    baseUrl,
                     HttpMethod.DELETE,
                     entity,
                     new ParameterizedTypeReference<ResponseWrapper<Boolean>>() {}
