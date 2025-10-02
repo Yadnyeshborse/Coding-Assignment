@@ -54,35 +54,9 @@ public class EmployeeConfig {
 
             return response != null ? response.getData() : null;
         } catch (HttpStatusCodeException ex) {
-            // Propagate upstream server status (e.g., 400 for validation errors) instead of masking as 500
             throw new ResponseStatusException(ex.getStatusCode(), ex.getResponseBodyAsString(), ex);
         }
     }
-
-
-//public EmployeeDto createEmployee(EmployeeDto input) {
-//    try {
-//        var request = new org.springframework.http.HttpEntity<>(input);
-//        var response = restTemplate.exchange(
-//                BASE_URL,
-//                HttpMethod.POST,
-//                request,
-//                new ParameterizedTypeReference<ResponseWrapper<EmployeeDto>>() {}
-//        ).getBody();
-//
-//        if (response != null) {
-//            return response.getData();
-//        } else {
-//            throw new RuntimeException("Empty response from backend when creating employee");
-//        }
-//    } catch (Exception e) {
-//        // Log the exact exception to help debug
-//        e.printStackTrace();
-//        throw new RuntimeException("Failed to create employee: " + e.getMessage(), e);
-//    }
-//}
-
-
 
     public String deleteEmployeeById(String name) {
         try {

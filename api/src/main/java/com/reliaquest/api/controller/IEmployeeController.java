@@ -38,6 +38,6 @@ public interface IEmployeeController<Entity, Input> {
     @PostMapping()
     ResponseEntity<Entity> createEmployee(@RequestBody Input employeeInput);
 
-//    @DeleteMapping("/{id}")
-//    ResponseEntity<String> deleteEmployeeById(@PathVariable String id);
+    @DeleteMapping("/{id}")
+    ResponseEntity<String> deleteEmployeeById(@PathVariable String id);
 }
