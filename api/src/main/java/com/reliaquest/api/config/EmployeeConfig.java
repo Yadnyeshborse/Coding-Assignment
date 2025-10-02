@@ -24,6 +24,7 @@ public class EmployeeConfig {
     @Autowired
     private RestTemplate restTemplate;
 
+    //base url
     @Value("${employee.client.base-url}")
     private String baseUrl;
 
