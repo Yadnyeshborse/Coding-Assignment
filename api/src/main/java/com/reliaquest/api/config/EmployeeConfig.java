@@ -54,7 +54,6 @@ public class EmployeeConfig {
 
             return response != null ? response.getData() : null;
         } catch (HttpStatusCodeException ex) {
-            // Propagate upstream server status (e.g., 400 for validation errors) instead of masking as 500
             throw new ResponseStatusException(ex.getStatusCode(), ex.getResponseBodyAsString(), ex);
         }
     }
